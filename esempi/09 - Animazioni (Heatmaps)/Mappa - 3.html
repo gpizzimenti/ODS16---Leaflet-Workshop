@@ -92,10 +92,10 @@
  			/*-------------------------------------------------------------*/			
 			
 			var eventsLoop =  function () 	{
-			
+
 							var nrEvents = 20,
-								increaseFactor = 0.6, 
-								decreaseFactor = 0.3;
+								increaseFactor = 0.8, 
+								decreaseFactor = 0.5;
 							
 							while (eventsPool.length < nrEvents) { // mantieni sempre un pool di {{nrEvents}} eventi
 							  eventsPool.push(simulatedEvent());
@@ -104,18 +104,20 @@
 							for (var i = 0; i < nrEvents; i++) {
 							
 								var event = eventsPool[i]; //..per ogni evento..
-			
-								if (event.val < event.peak && !event.peaked) { //..aumentiamo il valore dell'evento verso il valore di picco..
-										event.val = event.val + increaseFactor;
-								} else  { //..una volta raggiunto il picco..	
-										event.peaked = true; 
-										event.val = event.val - decreaseFactor; //..lo diminuiamo..
-									
-										if (event.val < 1) { //..raggiunto il valore zero l'evento viene rimosso dal pool 							
-											eventsPool.splice(i,1);
-											event = null;
-										}	
-								}			
+
+								if (event) {
+									if (event.val < event.peak && !event.peaked) { //..aumentiamo il valore dell'evento verso il valore di picco..
+											event.val = event.val + increaseFactor;
+									} else  { //..una volta raggiunto il picco..	
+											event.peaked = true; 
+											event.val = event.val - decreaseFactor; //..lo diminuiamo..
+										
+											if (event.val < 1) { //..raggiunto il valore zero l'evento viene rimosso dal pool 							
+												eventsPool.splice(i,1);
+												event = null;
+											}	
+									}
+								}								
 							} 
 							
 					var heatData = {
@@ -131,7 +133,12 @@
 			
  			/*-------------------------------------------------------------*/						
 
-			setInterval(eventsLoop,10); //aggiorniamo ogni 10 millsecs
+			//setInterval(eventsLoop,10); //aggiorniamo ogni 10 millsecs
+			
+			(function eventRepeat() { //aggiorniamo ogni volta che il motore di rendering del browser è "scarico"
+				eventsLoop();
+				requestAnimationFrame(eventRepeat);
+			})();
 			
 	</script>
 

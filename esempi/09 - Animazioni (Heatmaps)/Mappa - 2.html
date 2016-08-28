@@ -64,8 +64,8 @@
 			
 			var pulsate =  function (pulse,ascending) 	{
 			
-				var increaseFactor = 1, 
-				    decreaseFactor = 0.7;
+				var increaseFactor = 2, 
+				    decreaseFactor = 1.5;
 
 					if (pulse > 100) {
 						pulse = 100;
@@ -106,7 +106,12 @@
 			};			
  			/*-------------------------------------------------------------*/						
 
-			setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
+			//setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
+			
+			(function eventRepeat() {
+				eventPulsate();
+				requestAnimationFrame(eventRepeat);
+			})();			
 
 	</script>
 
