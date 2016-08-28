@@ -106,12 +106,12 @@
 			};			
  			/*-------------------------------------------------------------*/						
 
-			//setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
+			setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
 			
-			(function eventRepeat() {
+			/*(function eventRepeat() { //aggiorniamo ogni volta che il motore di rendering del browser è "scarico"
 				eventPulsate();
 				requestAnimationFrame(eventRepeat);
-			})();			
+			})();*/			
 
 	</script>
 
