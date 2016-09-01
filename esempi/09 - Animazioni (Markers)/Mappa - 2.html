@@ -50,14 +50,6 @@
 						}) 
 						.addTo(mappa);
 						
-
-			/*var CartoDB_PositronNoLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
-							attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com /attributions">CartoDB</a> &copy; <a href="http://www.istat.it/it/note-legali">ISTAT</a>',
-							subdomains: 'abcd',
-							maxZoom: 18,
-							minZoom: 6
-						})
-						.addTo(mappa);						*/
  			/*-------------------------------------------------------------*/						
 
 			var icon = L.divIcon({
@@ -67,6 +59,9 @@
 				shadowSize: [0, 0],
 				className: 'animated-icon my-icon-id' 
 			})
+			
+ 			/*-------------------------------------------------------------*/						
+			
 			
 			//marker latlng
 			var lCospecs = L.latLng(38.19941, 15.55602)
@@ -78,12 +73,42 @@
 			})
 
 			
-			marker.addTo(mappa);		
+			marker.addTo(mappa);
+			
 			var lMarina = L.latLng(38.19943,15.55889);
 			
-			setTimeout(function(){marker.setLatLng(lMarina);},2000);
+ 			/*-------------------------------------------------------------*/						
+
+			var flyButton = L.Control.extend({
+
+			  options: {
+				position: 'topright' 
+				//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
+			  },
+
+			  onAdd: function (map) {
+					var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+					container.style.backgroundColor = 'white';
+					container.style.width = '150px';
+					container.style.height = '30px';
+					container.style.lineHeight = '30px';					
+					container.style.fontWeight= 'bold';
+					container.style.textAlign= 'center';
+					container.style.cursor = 'pointer';					
+					container.innerHTML = "COME, FLY WITH ME!";
+					
+					container.onclick = function(){
+					  marker.setLatLng(lMarina);
+					}
+					
+				return container;
+				}
+			});
 			
-			//var myIcon = document.querySelector('.my-icon-id');
+			mappa.addControl(new flyButton());
+ 
+ 			/*-------------------------------------------------------------*/						
 			
 			
 
