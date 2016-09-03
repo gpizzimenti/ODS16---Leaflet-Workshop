@@ -35,7 +35,7 @@
 			//configurazione heatmap	
 			
 			var cfg = {
-			  "radius": 0.2,
+			  "radius": 0.2, //If scaleRadius is false, radius is measured in pixels. If scaleRadius is true it's measured in the scale of the map.
 			  "maxOpacity": .8, 
 			  "scaleRadius": true, 
 			  "useLocalExtrema": false, 
@@ -108,7 +108,7 @@
 
 			setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
 			
-			/*(function eventRepeat() { //aggiorniamo ogni volta che il motore di rendering del browser è "scarico"
+			/*(function eventRepeat() { //sincronizza l'animazione con gli altri eventi di rendering
 				eventPulsate();
 				requestAnimationFrame(eventRepeat);
 			})();*/			

@@ -135,7 +135,7 @@
 
 			//setInterval(eventsLoop,10); //aggiorniamo ogni 10 millsecs
 			
-			(function eventRepeat() { //aggiorniamo ogni volta che il motore di rendering del browser è "scarico"
+			(function eventRepeat() { //sincronizza l'animazione con gli altri eventi di rendering
 				eventsLoop();
 				requestAnimationFrame(eventRepeat);
 			})();
