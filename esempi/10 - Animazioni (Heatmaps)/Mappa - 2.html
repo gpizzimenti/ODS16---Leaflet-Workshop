@@ -1,125 +1,114 @@
-<!DOCTYPE HTML>
-<html lang="it">  
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="user-scalable=yes, width=device-width, initial-scale=1, maximum-scale=5"
+    />
+    <title>#ODS16 | Leaflet | Integrazioni (Heatmap.js)</title>
+    <meta charset="utf-8" />
 
-<head>
+    <link rel="stylesheet" href="../lib/leaflet.css" />
+    <script src="../lib/leaflet.js"></script>
+    <script src="../lib/heatmap-2.0.2.min.js"></script>
+    <script src="../lib/heatmap-leaflet.min.js"></script>
+  </head>
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1, maximum-scale=5">
-	<title>#ODS16 | Leaflet | Integrazioni (Heatmap.js)</title>
-     <meta charset="utf-8" />
+  <body>
+    <div id="mapContainer" style="width: 100%; height: 100%"></div>
 
-	<link rel="stylesheet" href="../lib/leaflet.css" />
-	<script src="../lib/leaflet.js"></script> 
-	<script src="../lib/heatmap-2.0.2.min.js"></script> 
-	<script src="../lib/heatmap-leaflet.min.js"></script> 
-	
- </head>
- 
- <body>
+    <script>
+      /*-------------------------------------------------------------*/
 
-	<div id="mapContainer" style="width: 100%; height: 100%"></div>
+      var mappa = L.map("mapContainer").setView([37.599994, 14.015356], 8);
 
-	<script>
- 			/*-------------------------------------------------------------*/						
+      /*-------------------------------------------------------------*/
 
-			var mappa = L.map('mapContainer')
-				.setView([37.599994, 14.015356], 8);
-						
+      var OpenStreetMap_Mapnik = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          minZoom: 6,
+          maxZoom: 18,
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }
+      ).addTo(mappa);
+      /*-------------------------------------------------------------*/
 
- 			/*-------------------------------------------------------------*/						
-					   
-			var OpenStreetMap_Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-							minZoom: 6,
-							maxZoom: 18,							
-							attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-						}) 
-						.addTo(mappa);
- 			/*-------------------------------------------------------------*/						
+      //configurazione heatmap
 
-			//configurazione heatmap	
-			
-			var cfg = {
-			  "radius": 0.2, //If scaleRadius is false, radius is measured in pixels. If scaleRadius is true it's measured in the scale of the map.
-			  "maxOpacity": .8, 
-			  "scaleRadius": true, 
-			  "useLocalExtrema": false, 
-			  "latField": 'lat',
-			  "lngField": 'lng',
-			  "valueField": 'val'
-			};		
-						
-			var heatmapLayer = new HeatmapOverlay(cfg);
-				heatmapLayer.addTo(mappa);				
+      var cfg = {
+        radius: 0.2, //If scaleRadius is false, radius is measured in pixels. If scaleRadius is true it's measured in the scale of the map.
+        maxOpacity: 0.8,
+        scaleRadius: true,
+        useLocalExtrema: false,
+        latField: "lat",
+        lngField: "lng",
+        valueField: "val",
+      };
 
-			var heatData = {
-					  max: 100,
-					  min: 0,
-					  data: [ 
-								{
-								  lat: 38.19941,
-								  lng: 15.55602,
-								  val: 0,
-								  ascending: true
-								}
-						]
-					};						
+      var heatmapLayer = new HeatmapOverlay(cfg);
+      heatmapLayer.addTo(mappa);
 
- 			/*-------------------------------------------------------------*/			
-			
-			var pulsate =  function (pulse,ascending) 	{
-			
-				var increaseFactor = 2, 
-				    decreaseFactor = 1.5;
+      var heatData = {
+        max: 100,
+        min: 0,
+        data: [
+          {
+            lat: 38.19941,
+            lng: 15.55602,
+            val: 0,
+            ascending: true,
+          },
+        ],
+      };
 
-					if (pulse > 100) {
-						pulse = 100;
-						ascending = false;
-					}
-					else if (pulse <= 0) {
-						pulse = 0;
-						ascending = true;
-					}
-					
-					if (ascending) { 
-						pulse = pulse + increaseFactor;
-					}		
-					else  { 
-						pulse = pulse - decreaseFactor;
-					}	
-					
+      /*-------------------------------------------------------------*/
 
-				return 	{ 
-						"pulse" : pulse,
-						"ascending" : ascending
-					}		
-	
-			};
-			
- 			/*-------------------------------------------------------------*/			
-			
-			var eventPulsate =  function () 	{
-			
-				var data = heatData.data[0],
-					ret = pulsate(data.val,data.ascending);
-					
-				data.val = ret.pulse;		
-				data.ascending = ret.ascending;		
+      var pulsate = function (pulse, ascending) {
+        var increaseFactor = 2,
+          decreaseFactor = 1.5;
 
-				heatmapLayer.setData(heatData);
-								
-			};			
- 			/*-------------------------------------------------------------*/						
+        if (pulse > 100) {
+          pulse = 100;
+          ascending = false;
+        } else if (pulse <= 0) {
+          pulse = 0;
+          ascending = true;
+        }
 
-			setInterval(eventPulsate,10); //aggiorniamo ogni 10 millsecs			
-			
-			/*(function eventRepeat() { //sincronizza l'animazione con gli altri eventi di rendering
+        if (ascending) {
+          pulse = pulse + increaseFactor;
+        } else {
+          pulse = pulse - decreaseFactor;
+        }
+
+        return {
+          pulse: pulse,
+          ascending: ascending,
+        };
+      };
+
+      /*-------------------------------------------------------------*/
+
+      var eventPulsate = function () {
+        var data = heatData.data[0],
+          ret = pulsate(data.val, data.ascending);
+
+        data.val = ret.pulse;
+        data.ascending = ret.ascending;
+
+        heatmapLayer.setData(heatData);
+      };
+      /*-------------------------------------------------------------*/
+
+      setInterval(eventPulsate, 10); //aggiorniamo ogni 10 millsecs
+
+      /*(function eventRepeat() { //sincronizza l'animazione con gli altri eventi di rendering
 				eventPulsate();
 				requestAnimationFrame(eventRepeat);
-			})();*/			
-
-	</script>
-
-
- </body>
-
+			})();*/
+    </script>
+  </body>
 </html>
