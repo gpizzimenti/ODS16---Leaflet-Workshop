@@ -1,4 +1,4 @@
-# ODS-16---Leaflet-Workshop
+# ODS-16 - Leaflet Workshop
 
 <a href="https://gpizzimenti.github.io/ODS16---Leaflet-Workshop/index.html">Esempi</a>
 
